@@ -53,6 +53,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonDataGridDisplayNameAttribute.cs" />
     <Compile Include="ObservableProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

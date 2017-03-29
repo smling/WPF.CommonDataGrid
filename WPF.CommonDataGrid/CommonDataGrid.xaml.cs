@@ -29,27 +29,23 @@ namespace WPF.CommonDataGrid
 
         private void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            string displayName = GetPropertyDisplayName(e.PropertyDescriptor);
-            if (!string.IsNullOrEmpty(displayName))
+            CommonDataGridDisplayNameAttribute displayNameAttr = GetAttribute(e.PropertyDescriptor);
+            //string displayName = GetPropertyDisplayName(e.PropertyDescriptor);
+            if (displayNameAttr != null)
             {
-                e.Column.Header = displayName;
+                e.Column.Header = !String.IsNullOrEmpty(displayNameAttr.DisplayName) ? displayNameAttr.DisplayName : "";
+                e.Column.Visibility = displayNameAttr.Visible;
             }
-
         }
 
-        public static string GetPropertyDisplayName(object descriptor)
+        public static CommonDataGridDisplayNameAttribute GetAttribute(object descriptor)
         {
             PropertyDescriptor pd = descriptor as PropertyDescriptor;
             if (pd != null)
             {
                 // Check for DisplayName attribute and set the column header accordingly
-                DisplayNameAttribute displayName = pd.Attributes[typeof(DisplayNameAttribute)] as DisplayNameAttribute;
-
-                if (displayName != null && displayName != DisplayNameAttribute.Default)
-                {
-                    return displayName.DisplayName;
-                }
-
+                CommonDataGridDisplayNameAttribute displayName = pd.Attributes[typeof(CommonDataGridDisplayNameAttribute)] as CommonDataGridDisplayNameAttribute;
+                return displayName;
             }
             else
             {
@@ -57,18 +53,52 @@ namespace WPF.CommonDataGrid
                 if (pi != null)
                 {
                     // Check for DisplayName attribute and set the column header accordingly
-                    Object[] attributes = pi.GetCustomAttributes(typeof(DisplayNameAttribute), true);
+                    Object[] attributes = pi.GetCustomAttributes(typeof(CommonDataGridDisplayNameAttribute), true);
                     for (int i = 0; i < attributes.Length; ++i)
                     {
-                        DisplayNameAttribute displayName = attributes[i] as DisplayNameAttribute;
-                        if (displayName != null && displayName != DisplayNameAttribute.Default)
+                        CommonDataGridDisplayNameAttribute displayName = attributes[i] as CommonDataGridDisplayNameAttribute;
+                        if (displayName != null && displayName != CommonDataGridDisplayNameAttribute.Default)
                         {
-                            return displayName.DisplayName;
+                            return displayName;
                         }
                     }
                 }
             }
             return null;
         }
+
+        //public static string GetPropertyDisplayName(object descriptor)
+        //{
+        //    PropertyDescriptor pd = descriptor as PropertyDescriptor;
+        //    if (pd != null)
+        //    {
+        //        // Check for DisplayName attribute and set the column header accordingly
+        //        DisplayNameAttribute displayName = pd.Attributes[typeof(DisplayNameAttribute)] as DisplayNameAttribute;
+
+        //        if (displayName != null && displayName != DisplayNameAttribute.Default)
+        //        {
+        //            return displayName.DisplayName;
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        PropertyInfo pi = descriptor as PropertyInfo;
+        //        if (pi != null)
+        //        {
+        //            // Check for DisplayName attribute and set the column header accordingly
+        //            Object[] attributes = pi.GetCustomAttributes(typeof(DisplayNameAttribute), true);
+        //            for (int i = 0; i < attributes.Length; ++i)
+        //            {
+        //                DisplayNameAttribute displayName = attributes[i] as DisplayNameAttribute;
+        //                if (displayName != null && displayName != DisplayNameAttribute.Default)
+        //                {
+        //                    return displayName.DisplayName;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }

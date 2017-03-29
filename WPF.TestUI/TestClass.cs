@@ -1,11 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
 
 namespace WPF.CommonDataGrid
 {
     public class TestClass : ObservableProperty
     {
         private int _testID;
-        [DisplayName("Test ID")]
+        [CommonDataGridDisplayName("Test ID")]
         public int TestID
         {
             get { return _testID; }
@@ -16,7 +18,7 @@ namespace WPF.CommonDataGrid
             }
         }
         private string _testStringValue;
-        [DisplayName("Test string value")]
+        [CommonDataGridDisplayName("Test string value", Visibility.Collapsed)]
         public string TestStringValue
         {
             get { return _testStringValue; }
@@ -24,6 +26,17 @@ namespace WPF.CommonDataGrid
             {
                 _testStringValue = value;
                 SetField(ref _testStringValue, value);
+            }
+        }
+        private DateTime _testDateTime;
+        [CommonDataGridDisplayName("Test DateTime")]
+        public DateTime TestDateTime
+        {
+            get { return _testDateTime; }
+            set
+            {
+                _testDateTime = value;
+                SetField(ref _testDateTime, value);
             }
         }
     }
